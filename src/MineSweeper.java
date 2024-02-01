@@ -2,206 +2,122 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class MineSweeper {
-    int row;
-    int col;
-    int bomb;
-    Random rand = new Random();
+    int rowNumber, colNumber, boardSize;
+    String[][] gameBoard;
+    String[][] mineBoard;
+    boolean isWin = true;
+    int mineCount;
+    int remained;
 
-    MineSweeper(int row, int col) {
-        this.row = row;
-        this.col = col;
-        this.bomb = 0;
+    Random random = new Random();
+    Scanner scan = new Scanner(System.in);
+
+    MineSweeper(int rowNumber, int colNumber) {
+        this.rowNumber = rowNumber;
+        this.colNumber = colNumber;
+        this.gameBoard = new String[this.rowNumber][this.colNumber];
+        this.mineBoard = new String[this.rowNumber][this.colNumber];
+        this.boardSize = this.rowNumber * this.colNumber;
+        this.mineCount = (this.rowNumber * this.colNumber) / 4;
+        this.remained = boardSize - mineCount;
+        prepareBoards();
+        prepareMines();
     }
 
-    void run() {
-
-        System.out.println("Tarla boyutu: " + this.row + " x " + this.col);
-        int[][] matrix = new int[this.row][this.col];
-
-        for (int i = 0; i < this.row; i++) {
-            for (int j = 0; j < this.col; j++) {
-                matrix[i][j] = -2;
-//                System.out.print("- ");
+    public void prepareBoards() {
+        for (int i = 0; i < this.rowNumber; i++) {
+            for (int j = 0; j < this.colNumber; j++) {
+                gameBoard[i][j] = "-";
+                mineBoard[i][j] = "0";
             }
-//            System.out.println();
         }
+    }
 
-        this.bomb = (this.row * this.col) / 4;
-        System.out.println("Mayın sayısı : " + this.bomb);
-        int randomRow;
-        int randomCol;
-        int bombCount = 0;
-        while (bombCount < bomb) {
-            randomRow = rand.nextInt(this.row);
-            randomCol = rand.nextInt(this.col);
-            if (matrix[randomRow][randomCol] != -1) {
-                matrix[randomRow][randomCol] = -1;
-                bombCount++;
+    public void prepareMines() {
+        int row, col, bomb = 0;
+        while (bomb < this.mineCount) {
+            row = random.nextInt(this.rowNumber);
+            col = random.nextInt(this.colNumber);
+            if (!mineBoard[row][col].equals("*")) {
+                mineBoard[row][col] = "*";
+                bomb++;
             }
         }
 
-        for (int i = 0; i < this.row; i++) {
-            for (int j = 0; j < this.col; j++) {
-                if (matrix[i][j] == -2) {
-//                    System.out.print("- ");
-                } else if (matrix[i][j] == -1) {
-//                    System.out.print("* ");
-                }
-            }
-//            System.out.println();
-        }
+    }
 
-        System.out.println("Mayın Tarlası Oyuna Hoşgeldiniz !");
-        for (int i = 0; i < this.row; i++) {
-            for (int j = 0; j < this.col; j++) {
-                System.out.print("- ");
+    public void print(String[][] arr) {
+        System.out.println("=====================");
+        for (int i = 0; i < this.rowNumber; i++) {
+            for (int j = 0; j < colNumber; j++) {
+                System.out.print(arr[i][j] + " ");
             }
             System.out.println();
         }
+    }
 
-        Scanner input = new Scanner(System.in);
-        int selectedRow, selectedCol;
-        int count = 0;
-
-        do {
-            System.out.print("Satır giriniz : ");
-            selectedRow = input.nextInt();
-            System.out.print("Sütun giriniz : ");
-            selectedCol = input.nextInt();
-
-            while (selectedRow >= matrix.length || selectedRow < 0 || selectedCol >= matrix[this.row - 1].length || selectedCol < 0) {
-                System.out.println("Geçersiz koordinat !");
-                System.out.print("Satır giriniz : ");
-                selectedRow = input.nextInt();
-                System.out.print("Sütun giriniz : ");
-                selectedCol = input.nextInt();
-            }
-
-            int kalan = this.row * this.col;
-            for (int i = 0; i < this.row; i++) {
-                for (int j = 0; j < this.col; j++) {
-                    if (matrix[i][j] != -2) {
-                        kalan--;
-                    }
-                }
-            }
-
-            if (matrix[selectedRow][selectedCol] == -1) {
-                System.out.println("Game Over !");
-                for (int i = 0; i < this.row; i++) {
-                    for (int j = 0; j < this.col; j++) {
-                        if (matrix[i][j] == -1) {
-                            System.out.print("* ");
-                        } else if (matrix[i][j] == -2) {
-                            System.out.print("- ");
-                        } else System.out.print(matrix[i][j] + " ");
-                    }
-                    System.out.println();
-                }
-                break;
-            }
-
-            if (selectedCol - 1 >= 0) {
-                if (matrix[selectedRow][selectedCol - 1] == -1) {
-                    matrix[selectedRow][selectedCol] = count + 1;
-                    count++;
-                } else {
-                    matrix[selectedRow][selectedCol] = count;
-                }
-            }
-
-            if ((selectedCol + 1 < matrix[selectedRow].length)) {
-                if (matrix[selectedRow][selectedCol + 1] == -1) {
-                    matrix[selectedRow][selectedCol] = count + 1;
-                    count++;
-                } else {
-                    matrix[selectedRow][selectedCol] = count;
-                }
-            }
-
-            if ((selectedRow - 1 >= 0)) {
-                if (matrix[selectedRow - 1][selectedCol] == -1) {
-                    matrix[selectedRow][selectedCol] = count + 1;
-                    count++;
-                } else {
-                    matrix[selectedRow][selectedCol] = count;
-                }
-            }
-
-            if ((selectedRow + 1 < matrix.length)) {
-                if (matrix[selectedRow + 1][selectedCol] == -1) {
-                    matrix[selectedRow][selectedCol] = count + 1;
-                    count++;
-                } else {
-                    matrix[selectedRow][selectedCol] = count;
-                }
-            }
-
-            if ((selectedRow - 1 >= 0) && (selectedCol - 1 >= 0)) {
-                if (matrix[selectedRow - 1][selectedCol - 1] == -1) {
-                    matrix[selectedRow][selectedCol] = count + 1;
-                    count++;
-                } else {
-                    matrix[selectedRow][selectedCol] = count;
-                }
-            }
-
-            if ((selectedRow - 1 >= 0) && (selectedCol + 1 < matrix[selectedRow].length)) {
-                if (matrix[selectedRow - 1][selectedCol + 1] == -1) {
-                    matrix[selectedRow][selectedCol] = count + 1;
-                    count++;
-                } else {
-                    matrix[selectedRow][selectedCol] = count;
-                }
-            }
-
-            if ((selectedRow + 1 < matrix.length) && (selectedCol - 1 >= 0)) {
-                if (matrix[selectedRow + 1][selectedCol - 1] == -1) {
-                    matrix[selectedRow][selectedCol] = count + 1;
-                    count++;
-                } else {
-                    matrix[selectedRow][selectedCol] = count;
-                }
-            }
-
-            if ((selectedRow + 1 < matrix.length) && (selectedCol + 1 < matrix[selectedRow].length)) {
-                if (matrix[selectedRow + 1][selectedCol + 1] == -1) {
-                    matrix[selectedRow][selectedCol] = count + 1;
-                    count++;
-                } else {
-                    matrix[selectedRow][selectedCol] = count;
-                }
-            }
-
-            if (kalan == 1) {
-                System.out.println("Oyunu Kazandınız !");
-                for (int i = 0; i < this.row; i++) {
-                    for (int j = 0; j < this.col; j++) {
-                        if (matrix[i][j] == -1) {
-                            System.out.print("* ");
-                        } else System.out.print(matrix[i][j] + " ");
-                    }
-                    System.out.println();
-                }
-                break;
-            }
-
-            for (int i = 0; i < this.row; i++) {
-                for (int j = 0; j < this.col; j++) {
-                    if (matrix[i][j] == -2 || matrix[i][j] == -1) {
-                        System.out.print("- ");
-                    } else {
-                        System.out.print(matrix[i][j] + " ");
-                    }
-                }
-                System.out.println();
-            }
-
-            System.out.println("count : " + count);
-            count = 0;
-
-        } while (matrix[selectedRow][selectedCol] != -1);
+    public void run() {
+        print(gameBoard);
+        print(mineBoard);
+        while (isWin) {
+            System.out.print("Oynamak istediğiniz satırı giriniz : ");
+            int row = scan.nextInt();
+            System.out.print("Oynamak istediğiniz sütunu giriniz : ");
+            int col = scan.nextInt();
+            game(row, col);
+        }
 
     }
 
+    public boolean isValid(int r, int c) {
+        return (r >= 0 && r < this.rowNumber) && (c >= 0 && c < this.colNumber);
+    }
+
+    public void game(int row, int col) {
+        if (!isValid(row, col)) {
+            System.out.println("Lütfen geçerli bir koordinat giriniz !");
+            return;
+        }
+        if (!gameBoard[row][col].equals("-")) {
+            System.out.println("Bu koordinat daha önce seçildi, başka bir koordinat girin!");
+            return;
+        }
+        if (mineBoard[row][col].equals("*")) {
+            print(mineBoard);
+            System.out.println("GAME OVER !");
+            System.exit(0);
+        }
+        int count = calcMines(row, col);
+        gameBoard[row][col] = String.valueOf(count);
+        mineBoard[row][col] = String.valueOf(count);
+        remained--;
+        if (count == 0) {
+            for (int i = row - 1; i <= row + 1; i++) {
+                for (int j = col - 1; j <= col + 1; j++) {
+                    if (isValid(i, j) && gameBoard[i][j].equals("-")) {
+                        game(i, j);
+                    }
+                }
+            }
+        }
+        if (remained == 0) {
+            print(mineBoard);
+            System.out.println("OYUNU KAZANDINIZ !");
+            System.exit(0);
+        } else {
+            print(gameBoard);
+        }
+    }
+
+    public int calcMines(int row, int col) {
+        int count = 0;
+        for (int i = row - 1; i <= row + 1; i++) {
+            for (int j = col - 1; j <= col + 1; j++) {
+                if (isValid(i, j) && mineBoard[i][j].equals("*")) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }

@@ -1,29 +1,35 @@
 # Mine Sweeper
 
-A simple Mine Sweeper game using Java and running in terminal.
+Java dilinde Mayın Tarlası oyunu yapmanızı bekliyoruz.
 
-## The Rules
+## Oyun Kuralları:
 
-1. The game is text-based.
-2. The multidimensional array should be used.
-3. The user should enter the dimensions.
-4. The mine count should be the quarter of array's element count. For example, if the array is 4x3, then the mine count should be 3. How to calculate: The element count is row number x column number => 4 x 3 = 12. The mine count is element count / 4 => 12 / 4 = 3.
-5. The user should select a point on the array, enter a value for the row and for the column.
-6. If the selected point is out of the boundries of array, the user should re-enter the values.
-7. If the selected point has a mine, it is game over.
-8. If there is a mine connected to the selected point, the game should show the count of those mines. If there is no mine, the game should show as "0" on that point.
-9. If the user selects all non-mine points, he should win the game.
+	1. Oyun metin tabanlıdır.
+	2. Proje çift boyutlu diziler kullanılarak yapılmalıdır.
+	3. MineSweeper sınıfı içerisinde tasarlanmalıdır. Metodlar kullanılarak kod tekrarı önlenmelidir.
+	4. Matris boyutunu yani satır ve sütun sayısını kullanıcı belirlemelidir. Minimum 2x2 boyutunda matris grişine izin verilmeli, 2x2 den küçük değer girişlerinde kullanıcıya uyarı verilmeli ve tekrar satır, sütun girmesi istenmelidir.
+	5. Diziye ait eleman sayısının çeyreği (elemanSayisi / 4) kadar rastgele mayın yerleştirilmelidir. Mayın sayısı, eleman sayısı/4'ten az ya da çok olmamalıdır. Örneğin dizi 4x3 boyutunda ise eleman sayısı (satırSayısı * sütunSayısı) formülü ile hesaplanmalı ve boyutu 12 olacaktır. Bu durumda mayın sayısı 12 / 4 = 3 adet olmalıdır. 3'ten az ya da çok olmamalıdır.
+	6. İpucu: 2 boyutlu diziler string veri türünde olması işinizi kolaylaştıracaktır. Mayınların konumlarını tutacak bir dizi, oyuncuya göstereceğiniz ayrı bir dizi tanımlamalısınız.
+	7. Oyuncuya gösterilen haritada hiç açılmamış kutucukları "-" sembolü ile göstermelisiniz.
+	8. Mayınlar "*" sembolü ile gösterilmelidir. Farklı semboller kullanmayınız.
+	9. Kullanıcı matris üzerinden bir nokta seçmeli, nokta seçimi için satır ve sütun değerlerini girmesi istenilmelidir.
+	10. Seçilen noktanın dizinin sınırları içerisinde olup olmadığı kontrol edilmeli ve koşul sağlanmazsa konsolda uyarı metni yazdırılıp kullanıcıdan tekrar yeni koordinat istenmelidir.
+	11. Daha önce girilmiş bir koordinat girildiğinde kullanıcıya "bu koordinat daha önce seçildi, başka bir koordinat girin" şeklinde uyarı gösterilmeli ve yeni giriş yapması sağlanmalıdır.
+	12. Kullanıcının girdiği noktada mayın var ise oyunu kaybetmelidir. Buna uygun şekilde konsolda mesaj gösterilmelidir.
+	13. Kullanıcının girdiği noktada mayın yok ise, noktanın etrafındaki tüm komşu konumlara bakılmalı (sağı, solu, yukarısı, aşağısı, sol üst çapraz, sağ üst çapraz, sağ alt çapraz, sol alt çapraz) ve bu komşu noktalardaki mayınların sayısının toplamı kullanıcının girmiş olduğu koordinata yazılmalıdır. Noktaya değen herhangi bir mayın yok ise "0" değeri yazılmalıdır. Farklı değer ve sembol kullanmayın.
+	14. Kullanıcı hiç bir mayına basmadan tüm noktaları açarsa oyunu kazanmalıdır. Bu durumda da uygun mesaj konsolda gösterilmelidir.
 
-## Screenshots
 
-Starting game:
+## Çözüm:
+
+Oyuna başlama:
 
 ![Starting game](/src/img/1.png)
 
-Winning Scenario:
+Oyunu Kazanma:
 
-![Starting game](/src/img/2.png)
+![winning game](/src/img/2.png)
 
-Losing Scenario:
+Oyunu Kaybetme:
 
-![Starting game](/src/img/3.png)
+![losing game](/src/img/3.png)
